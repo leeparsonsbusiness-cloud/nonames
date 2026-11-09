@@ -53,7 +53,7 @@ export default function SafetyPage() {
               <Link href="/opt-out" className="text-hot underline">
                 opt-out page
               </Link>{" "}
-              or by sending a DM with &ldquo;opt out&rdquo; to @nonames.love.
+              or by sending a DM with &ldquo;opt out&rdquo; to @nonames.luv.
             </p>
           </section>
         </div>

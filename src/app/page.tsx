@@ -5,7 +5,7 @@ import { getViewer } from "@/lib/session";
 import { env } from "@/lib/env";
 
 const steps = [
-  { emoji: "💬", title: "DM for your code", text: "DM @nonames.love on Instagram. Our bot gives you a permanent secret passcode." },
+  { emoji: "💬", title: "DM for your code", text: "DM @nonames.luv on Instagram. Our bot gives you a permanent secret passcode." },
   { emoji: "💌", title: "Add up to 5 crushes", text: "Secretly add people by their Instagram username. They will never know." },
   { emoji: "💘", title: "Mutual? Unmasked.", text: "If any of them secretly pick you too, you both get unmasked and slide into DMs!" },
 ];

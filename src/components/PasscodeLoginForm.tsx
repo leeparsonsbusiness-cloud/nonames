@@ -13,7 +13,7 @@ export function PasscodeLoginForm({ botHandle }: { botHandle: string }) {
       <div className="rounded-2xl border-2 border-dashed border-pink-200 bg-pink-50/70 p-4">
         <div className="text-xs font-black uppercase tracking-wider text-hot">Step 1: Get Your Code</div>
         <p className="mt-1 text-xs font-semibold text-zinc-600">
-          DM anything (e.g. &ldquo;crush&rdquo;) to our official bot. It replies in 2 seconds with your permanent code!
+          DM anything (e.g. &ldquo;crush&rdquo;) to our official bot. It replies in 2 seconds with your secret code!
         </p>
         <a
           href={dmUrl}
@@ -25,37 +25,27 @@ export function PasscodeLoginForm({ botHandle }: { botHandle: string }) {
         </a>
       </div>
 
-      {/* Step 2: Enter Username + Code */}
+      {/* Step 2: Enter Code Only */}
       <form action={action} className="flex flex-col gap-3">
-        <div className="text-xs font-black uppercase tracking-wider text-muted">Step 2: Enter & Unlock</div>
-
-        <label className="relative block">
-          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg font-black text-zinc-400">@</span>
-          <input
-            name="username"
-            className="input pl-10 text-base py-3"
-            placeholder="your instagram username"
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            autoComplete="username"
-            required
-          />
-        </label>
+        <div className="text-xs font-black uppercase tracking-wider text-muted">Step 2: Enter Secret Code</div>
 
         <label className="relative block">
           <input
             name="passcode"
             type="text"
-            className="input text-center text-lg tracking-widest font-black py-3"
-            placeholder="5-digit code (e.g. 48219)"
+            className="input text-center text-2xl tracking-widest font-black py-4 border-2 border-pink-200 focus:border-hot"
+            placeholder="ENTER YOUR CODE"
             autoCapitalize="characters"
             autoCorrect="off"
             spellCheck={false}
-            maxLength={10}
+            maxLength={12}
             required
+            autoFocus
           />
         </label>
+        <p className="text-center text-[11px] font-semibold text-muted">
+          Your code links directly to your Instagram account. No passwords needed.
+        </p>
 
         <label className="flex items-center gap-2 text-xs font-bold text-muted px-1 mt-1">
           <input name="adult" type="checkbox" defaultChecked className="size-4 accent-pink-500 rounded" required />

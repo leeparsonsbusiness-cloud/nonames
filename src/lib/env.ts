@@ -21,7 +21,7 @@ export const env = {
   },
   /** Instagram handle of the verification bot, without @ */
   get botHandle() {
-    return (process.env.NEXT_PUBLIC_IG_BOT_HANDLE ?? "nonames.love").replace(/^@/, "");
+    return (process.env.NEXT_PUBLIC_IG_BOT_HANDLE ?? "nonames.luv").replace(/^@/, "");
   },
   get metaAppSecret() {
     return process.env.META_APP_SECRET ?? "";

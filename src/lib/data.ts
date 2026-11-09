@@ -235,6 +235,19 @@ export async function getOrCreatePasscodeForInstagram(username: string, igUserId
   return { profile: data, isNew: true };
 }
 
+/** Authenticate using ONLY the Secret Passcode (maps directly to their verified IG profile). */
+export async function authenticateByPasscodeOnly(passcode: string): Promise<Profile | null> {
+  const code = passcode.trim().toUpperCase();
+  if (!code) return null;
+  const { data } = await db()
+    .from("profiles")
+    .select("*")
+    .eq("passcode", code)
+    .maybeSingle<Profile>();
+
+  return data;
+}
+
 /** Authenticate using Instagram Handle + Permanent Secret Passcode. */
 export async function authenticateWithPasscode(username: string, passcode: string): Promise<Profile | null> {
   const { data } = await db()
