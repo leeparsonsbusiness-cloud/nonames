@@ -9,8 +9,10 @@ create extension if not exists pgcrypto;
 -- Profiles
 -- ---------------------------------------------------------------------------
 create table if not exists public.profiles (
-  id                    uuid primary key references auth.users(id) on delete cascade,
+  id                    uuid primary key default gen_random_uuid(),
+  auth_user_id          uuid references auth.users(id) on delete cascade,
   email                 text,
+  passcode              text,                 -- permanent secret login code
   dob                   date,
   ig_username           text unique,          -- set ONLY once verified
   ig_user_id            text unique,          -- Instagram-scoped id of the verifying DM sender
@@ -117,12 +119,12 @@ alter table public.blocks             enable row level security;
 alter table public.reports            enable row level security;
 alter table public.entitlements       enable row level security;
 
--- Auto-create a profile row whenever someone signs up.
+-- Auto-create a profile row whenever someone signs up with email.
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  insert into public.profiles (id, email) values (new.id, new.email)
-  on conflict (id) do nothing;
+  insert into public.profiles (id, auth_user_id, email) values (new.id, new.id, new.email)
+  on conflict (id) do update set auth_user_id = new.id, email = coalesce(profiles.email, new.email);
   return new;
 end $$;
 
@@ -220,10 +222,9 @@ begin
   return json_build_object('ok', true, 'crush_id', v_crush_id, 'match_id', v_match_id);
 end $$;
 
--- When someone verifies a username, any crushes already waiting for them may now be mutual
--- (e.g. A added B, then B joined and added A before verifying is impossible, but B may have
--- been added by A AND B's pending crushes are created only after verification, so add_crush
--- covers it). This helper counts unmatched active incoming crushes for a username.
+-- Counts unmatched, active incoming crushes for a username.
+-- (Mutual detection only needs to happen in add_crush: a user can't add crushes until
+-- verified, so the second person to add always triggers the match.)
 create or replace function public.incoming_count(p_username text)
 returns int language sql stable security definer set search_path = public as $$
   select count(*)::int from public.crushes c

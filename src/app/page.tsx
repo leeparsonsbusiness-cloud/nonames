@@ -1,69 +1,69 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Footer, LoveShell } from "@/components/ui";
+import { PasscodeLoginForm } from "@/components/PasscodeLoginForm";
+import { getViewer } from "@/lib/session";
+import { env } from "@/lib/env";
 
-export default function Home() {
+const steps = [
+  { emoji: "💬", title: "DM for your code", text: "DM @nonames.love on Instagram. Our bot gives you a permanent secret passcode." },
+  { emoji: "💌", title: "Add up to 5 crushes", text: "Secretly add people by their Instagram username. They will never know." },
+  { emoji: "💘", title: "Mutual? Unmasked.", text: "If any of them secretly pick you too, you both get unmasked and slide into DMs!" },
+];
+
+export default async function Home() {
+  const viewer = await getViewer();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <LoveShell>
+      <h1 className="text-center text-4xl font-black leading-tight drop-shadow-sm sm:text-5xl">
+        Someone might have a crush on you 👀
+      </h1>
+      <p className="mt-3 text-center text-lg font-bold text-white/90">No names. Until it&apos;s mutual.</p>
+
+      <div className="card mt-8 w-full p-6 text-ink shadow-2xl">
+        {viewer?.isVerified ? (
+          <div className="text-center py-4">
+            <div className="text-5xl animate-bounce">👋</div>
+            <h2 className="mt-3 text-2xl font-black text-ink">Welcome back, @{viewer.profile.ig_username}!</h2>
+            <p className="mt-1 text-sm font-semibold text-muted">
+              You are logged in and ready to view admirers.
+            </p>
+            <Link href="/crushes" className="btn-hot mt-5 w-full text-lg font-black shadow-lg">
+              Open My Crush List 💌
+            </Link>
+          </div>
+        ) : (
+          <>
+            <PasscodeLoginForm botHandle={env.botHandle} />
+            <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+              <span className="chip text-[11px] py-1.5">100% anonymous</span>
+              <span className="chip text-[11px] py-1.5">Mutual-only reveal</span>
+              <span className="chip text-[11px] py-1.5">18+ UCLA only</span>
+            </div>
+          </>
+        )}
+      </div>
+
+      <p className="mt-6 text-center text-sm font-bold text-white/90">
+        Add up to 5 crushes. They&apos;ll never know… unless they pick you too.
+      </p>
+
+      <section className="mt-12 w-full space-y-3">
+        <h2 className="text-center text-2xl font-black tracking-wide">how it works</h2>
+        {steps.map((s, i) => (
+          <div key={s.title} className="flex items-start gap-4 rounded-3xl bg-white/15 p-5 backdrop-blur">
+            <div className="text-3xl">{s.emoji}</div>
+            <div>
+              <div className="font-black text-base">
+                {i + 1}. {s.title}
+              </div>
+              <div className="text-xs font-semibold text-white/85 leading-relaxed">{s.text}</div>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <Footer light />
+    </LoveShell>
   );
 }
